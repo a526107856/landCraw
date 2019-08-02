@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+  <contextName>logback</contextName>
+  <property name="log.path" value="log.log"/>
+  <!--输出到控制台-->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+         <level>ERROR</level>
+     </filter>-->
+    <encoder>
+      <pattern>%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%-15thread]) %highlight(%-5level)
+        %boldMagenta(%-30logger{10}) - %cyan(%msg%n)
+      </pattern>
+    </encoder>
+  </appender>
+
+  <!--输出到文件-->
+  <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!---->
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>15</maxHistory>
+      <totalSizeCap>2GB</totalSizeCap>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n
+      </pattern>
+    </encoder>
+  </appender>
+  <root level="info">
+    <appender-ref ref="console"/>
+    <appender-ref ref="file"/>
+  </root>
+
+  <!-- logback为java中的包 -->
+  <logger name="com.dudu.controller"/>
+  <!--logback.LogbackDemo：类的全路径 -->
+  <logger name="com.dudu.controller.LearnController" level="WARN" additivity="false">
+    <appender-ref ref="console"/>
+  </logger>
+
+  <logger name="org.apache" level="WARN"/>
+  <logger name="httpclient" level="WARN"/>
+</configuration>
