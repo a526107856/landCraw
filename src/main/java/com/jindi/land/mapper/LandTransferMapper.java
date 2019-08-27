@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
 public interface LandTransferMapper {
 
   @Insert(
-      "insert into `prism_cq`.`land_transfer`(`mark`, `num`, `location`, `aministrativeArea`, `user_change_pre`, `user_change_now`, `user_change_pre_clean`, `user_change_now_clean`, `area`, `useful`, `use_type`, `years_of_use`, `situation`, `level`, `merchandise_type`, `merchandise_price`, `merchandise_time`, `url`,`merchandise_time_clean`) "
+      "insert ignore into `prism_cq`.`land_transfer`(`mark`, `num`, `location`, `aministrativeArea`, `user_change_pre`, `user_change_now`, `user_change_pre_clean`, `user_change_now_clean`, `area`, `useful`, `use_type`, `years_of_use`, `situation`, `level`, `merchandise_type`, `merchandise_price`, `merchandise_time`, `url`,`merchandise_time_clean`) "
           + "VALUES (#{mark}, #{num}, #{location}, #{aministrativeArea}, #{userChangePre}, #{userChangeNow}, #{userChangePreClean}, #{userChangeNowClean}, #{area}, #{useful}, #{useType}, #{yearsOfUse}, #{situation}, #{level}, #{merchandiseType}, #{merchandisePrice}, #{merchandiseTime},#{url},#{merchandiseTimeClean});")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   int insert(LandTransferEntity entity);

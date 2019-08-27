@@ -53,7 +53,7 @@ public abstract class LandCrawHandler {
   private String redisDetailUrlKey;
   private String listUrl;
 
-  private String URL = "http://www.landchina.com/";
+  private String URL = "https://www.landchina.com/";
   private static final String COMMON_DATE = "yyyy-MM-dd";
   private static Map<String, String> provinceMap = new HashMap<>();
   private static HashMap<String, Map> fontDic = new HashMap<>();
@@ -297,6 +297,7 @@ public abstract class LandCrawHandler {
     String crackCookie = "";
     try {
       //添加浏览器大小信息
+      //
       String userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
       Connection conn = Jsoup.connect(listUrl)
           .proxy(proxy.getHostName(), proxy.getPort()).userAgent(userAgent).timeout(60 * 1000);
@@ -307,6 +308,7 @@ public abstract class LandCrawHandler {
       String srcurl = getHexStr(listUrl);
 
       //通过第一次cookie获取 security_session_mid_verify
+      //.proxy(proxy.getHostName(), proxy.getPort())
       conn = Jsoup.connect(listUrl + "&security_verify_data=" + securityVerifyData)
           .proxy(proxy.getHostName(), proxy.getPort()).userAgent(userAgent)
           .cookie("security_session_verify", yunsuoSessionVerify).cookie("srcurl", srcurl)
@@ -314,12 +316,15 @@ public abstract class LandCrawHandler {
           .timeout(60 * 1000);
 
       response = conn.execute();
-      String securitySessionMidVerify = response.cookie("ASP.NET_SessionId");
+      String security_session_mid_verify = response.cookie("security_session_mid_verify");
       // 全部cookie拼接
-      crackCookie = "ASP.NET_SessionId=2q5vacmcywquguow00s0koh4; security_session_verify="
-          + yunsuoSessionVerify +
-          "; srcurl=" + srcurl +
-          "; ASP.NET_SessionId=" + securitySessionMidVerify;
+      //ASP.NET_SessionId=u3mfsqp1mm34iivb0n5qtj3l;
+      crackCookie = "security_session_verify="
+          + yunsuoSessionVerify
+          + "; security_session_mid_verify=" + security_session_mid_verify;
+          //+ "; srcurl=" + srcurl
+          //+ "; security_verify_data="
+          //+ securityVerifyData;
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -352,7 +357,7 @@ public abstract class LandCrawHandler {
       }
       log.warn("new font {}", fontUrl);
     }
-    return null;
+    return detailHtml;
   }
 
   /**
@@ -428,7 +433,6 @@ public abstract class LandCrawHandler {
         mapParams.put("selectDistrict", selectDistrict);
         mapParams.put("pageNo", pageNo + "");
         //请求list
-        //TODO 301错误
         String strHtml = getListHtml(mapParams);
 
         // 解析列表页
@@ -486,6 +490,7 @@ public abstract class LandCrawHandler {
       String securityVerifyData = getHexStr("1920,1080");
       //获取加密cookie
       String cookie = crackCookie(host);
+
       if (StringUtils.isEmpty(cookie)) {
         log.warn("get cookie failed");
         return null;
@@ -493,18 +498,24 @@ public abstract class LandCrawHandler {
       HttpPost post = new HttpPost(listUrl + "&security_verify_data=" + securityVerifyData);
 
       post.addHeader("User-Agent",
-          "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36");
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36");
       post.addHeader("Host", "www.landchina.com");
-      post.addHeader("Referer", listUrl);
+      //post.addHeader("Referer", listUrl);
       post.addHeader("Upgrade-Insecure-Requests", "1");
+      post.addHeader("Referer",listUrl + "&security_verify_data=" + securityVerifyData);
+      post.addHeader("Origin","www.landchina.com");
+      post.addHeader("Connection","keep-alive");
+
       post.addHeader("Cookie",
           cookie);
       //封装post参数
-
       List<NameValuePair> nvps = getListParams(map);
+      //nvps.add(new BasicNameValuePair("security_verify_data",security_verify_data));
       post.setEntity(new UrlEncodedFormEntity(nvps, "gbk"));
 
       return HttpClientUtils.getInstance().post(post, host);
+
+
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     } catch (Exception e) {

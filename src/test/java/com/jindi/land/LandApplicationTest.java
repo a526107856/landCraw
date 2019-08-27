@@ -3,6 +3,7 @@ package com.jindi.land;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.annotation.MapperScan;
@@ -20,7 +21,8 @@ public class LandApplicationTest {
   //(1)创建单例实例
   static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-  //@Test
+  @Test
+  @Ignore
   public void testSdf() {
 
     //(2)创建多个线程，并启动

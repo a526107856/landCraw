@@ -28,7 +28,7 @@ public class CrawCommonServiceImpl implements ICrawCommonService {
         retreiveProxy = proxyService.retreiveProxy();
         String html = HttpClientUtils.getInstance().get(get, retreiveProxy);
         if (!StringUtils.isEmpty(html)) {
-          log.info("get success proxy={}", retreiveProxy.toString());
+          log.info("get good proxy={}", retreiveProxy.toString());
           return retreiveProxy;
         } else {
           log.info("failed proxy={}", retreiveProxy.toString());
