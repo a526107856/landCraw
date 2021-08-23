@@ -30,7 +30,7 @@
     <commons-io.version>2.6</commons-io.version>
     <mybaits.version>1.3.2</mybaits.version>
     <proxy.version>1.0.0-SNAPSHOT</proxy.version>
-    <jsoup.version>1.11.2</jsoup.version>
+    <jsoup.version>1.14.2</jsoup.version>
     <fastJosn.version>1.2.47</fastJosn.version>
     <maven-plugins.version>2.4.3</maven-plugins.version>
   </properties>
